@@ -5,10 +5,11 @@ from src.exceptions import InsufficientDataError, NotFittedError
 class LinearTrendForecaster(BaseForecaster):
     def __init__(self, floor_value: Optional[float] = 0.0):
         self.floor_value = floor_value
-        self.alpha = Optional[float] = None
-        self.beta = Optional[float] = None
-        
-    def _calculate_coefficients(x: List[int], y: list[float]) -> Tuple[float, float]
+        self.alpha: Optional[float] = None
+        self.beta: Optional[float] = None
+
+    @staticmethod    
+    def _calculate_coefficients(x: List[int], y: list[float]) -> Tuple[float, float]:
         n = len(x)
         if n < 2:
             raise InsufficientDataError("Need more points")
@@ -35,7 +36,7 @@ class LinearTrendForecaster(BaseForecaster):
 
 
     def predict(self, x: List[int]) -> List[float]:
-        if self.alpha is None of self.beta is None:
+        if self.alpha is None or self.beta is None:
             raise NotFittedError("The model is not fited!")
 
         predictions = []

@@ -53,4 +53,4 @@ def test_model_floor_values_clipping():
 
     predictions = model.predict([5, 6])
 
-    assert predictioms == [0.0, 0.0]
+    assert predictions == [0.0, 0.0]

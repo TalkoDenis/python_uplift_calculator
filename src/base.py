@@ -11,7 +11,7 @@ class UpliftResult:
     test_dates: List[datetime.date]
     forecast_data: List[float]
 
-    def plot:
+    def plot(self):
         pass
 
 class BaseForecaster(ABC):
