@@ -9,3 +9,7 @@ class InsufficientDataError(UpliftLibraryError, ValueError):
 class NotFittedError(UpliftLibraryError, RuntimeError):
     "When the model is not fitted"
     pass
+
+class DataValidationError(UpliftLibraryError, ValueError):
+    "If we have problems with the data"
+    pass
