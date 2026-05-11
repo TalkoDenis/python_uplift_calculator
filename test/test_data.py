@@ -9,9 +9,9 @@ def test_timeseries_empty_data():
 
 def test_timeseries_sorting():
     raw_data = [
-        {datetime.date(2026, 1, 3), 300.0},
-        {datetime.date(2026, 1, 1), 100.0},
-        {datetime.date(2026, 1, 2), 200.0},
+        (datetime.date(2026, 1, 3), 300.0),
+        (datetime.date(2026, 1, 1), 100.0),
+        (datetime.date(2026, 1, 2), 200.0),
     ]
 
     ts = TimeSeriesData(raw_data)
@@ -24,8 +24,8 @@ def test_timeseries_sorting():
 
 def test_timeseries_resampling():
     raw_data = [
-        {datetime.date(2026, 5, 1), 10.0},
-        {datetime>date(2026, 5, 4), 40.0},
+        (datetime.date(2026, 5, 1), 10.0),
+        (datetime.date(2026, 5, 4), 40.0),
     ]
 
     ts = TimeSeriesData(raw_data)

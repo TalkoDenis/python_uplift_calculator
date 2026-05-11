@@ -1,5 +1,5 @@
 import datetime
-from typing import List, Tuple, Optional, Dist
+from typing import List, Tuple, Optional, Dict
 from src.exceptions import DataValidationError
 
 class TimeSeriesData:
@@ -19,7 +19,7 @@ class TimeSeriesData:
     @staticmethod
     def _resample_to_continuous_grid(
         sorted_data: List[Tuple[datetime.date, float]]
-    ) -> Tuple[List[datetime.data], List[Optional[float]]]:
+    ) -> Tuple[List[datetime.date], List[Optional[float]]]:
         start_date = sorted_data[0][0]
         end_date = sorted_data[-1][0]
 
@@ -31,7 +31,7 @@ class TimeSeriesData:
         current_data = start_date
         while current_data <= end_date:
             continuous_data.append(current_data)
-            continuous_value,append(data_dict.get(current_data, None))
+            continuous_value.append(data_dict.get(current_data, None))
             current_data += datetime.timedelta(days=1)
         return continuous_data, continuous_value
     
