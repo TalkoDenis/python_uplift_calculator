@@ -1,4 +1,5 @@
 import pytest
+
 from src.models import LinearTrendForecaster
 from src.exceptions import InsufficientDataError, NotFittedError
 
@@ -41,7 +42,7 @@ def test_model_fit_predict_pipeline():
 def test_model_predict_without_fit():
     model = LinearTrendForecaster()
 
-    with pytest.raise(NotFittedError):
+    with pytest.raises(NotFittedError):
         model.predict([1, 2, 3])
 
 def test_model_floor_values_clipping():

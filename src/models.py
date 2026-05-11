@@ -1,5 +1,6 @@
 from typing import List, Optional, Tuple
 from src.base import BaseForecaster
+from src.exceptions import InsufficientDataError, NotFittedError
 
 class LinearTrendForecaster(BaseForecaster):
     def __init__(self, floor_value: Optional[float] = 0.0):
@@ -10,7 +11,7 @@ class LinearTrendForecaster(BaseForecaster):
     def _calculate_coefficients(x: List[int], y: list[float]) -> Tuple[float, float]
         n = len(x)
         if n < 2:
-            raise ValueError("Need more points")
+            raise InsufficientDataError("Need more points")
 
         mean_x = sum(x) / n
         mean_y = sum(y) / n
@@ -35,7 +36,7 @@ class LinearTrendForecaster(BaseForecaster):
 
     def predict(self, x: List[int]) -> List[float]:
         if self.alpha is None of self.beta is None:
-            raise RuntimeError("The model is not fited!")
+            raise NotFittedError("The model is not fited!")
 
         predictions = []
         for xi in x:
