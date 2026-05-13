@@ -10,11 +10,11 @@ class DataPreprocessor:
         if not values:
             return
 
-        if values [0] is None or values[-1] is None:
-            raise DataValidationError('The first and the last ones value cannot be empty')
-
         if all(v is None for v in values):
             raise DataValidationError('All values are None!')
+        
+        if values [0] is None or values[-1] is None:
+            raise DataValidationError('The first and the last ones value cannot be empty')
 
     @staticmethod
     def impute_missing_values(values: List[Optional[float]], strategy: str='linear') -> List[float]:
@@ -59,8 +59,8 @@ class DataPreprocessor:
         while i < n:
             if result[i] is None:
                 j = i + 1
-            while j < n and result[j] is None:
-                j += 1
+                while j < n and result[j] is None:
+                    j += 1
                 start_val = result[i - 1]
                 end_val = result[j]
                 steps = j - (i - 1)
@@ -78,11 +78,11 @@ class DataPreprocessor:
     @staticmethod
     def _impute_mean(values: List[Optional[float]]) -> List[float]:
         valid_numbers = [v for v in values if v is not None]
-        avg_values = statisticst.mean(valid_numbers)
+        avg_values = statistics.mean(valid_numbers)
         return [avg_values if v is None else v for v in values]
 
     @staticmethod
     def _impute_median(values: List[Optional[float]]) -> List[float]:
         valid_numbers = [v for v in values if v is not None]
-        avg_values = statisticst.median(valid_numbers)
+        avg_values = statistics.median(valid_numbers)
         return [avg_values if v is None else v for v in values]
