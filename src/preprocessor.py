@@ -108,7 +108,7 @@ class DataPreprocessor:
         for i in range(len(values)):
             start_idx = max(0, i - window_size + 1)
             window = values[start_idx: i + 1] 
-            avg_value = staticmethod.mean(window)
+            avg_value = statistics.mean(window)
             result.append(avg_value)
         return result
 
@@ -118,6 +118,6 @@ class DataPreprocessor:
         for i in range(len(values)):
             start_idx = max(0, i - window_size + 1)
             window = values[start_idx: i + 1] 
-            median_value = staticmethod.median(window)
+            median_value = statistics.median(window)
             result.append(median_value)
         return result

@@ -44,3 +44,22 @@ def test_impute_median():
     data = [10.0, 100.0, None, 200.0]
     result = DataPreprocessor.impute_missing_values(data, strategy='median')
     assert result == [10.0, 100.0, 100.0, 200.0]
+
+def test_smoth_no_strategy():
+    data = [10.0, 20.0, 30.0]
+    assert DataPreprocessor.smooth_data(data, strategy=None) == data
+    assert DataPreprocessor.smooth_data(data, strategy='moving_average', window_size=1) == data
+
+def test_smoth_unknown_strategy():
+    with pytest.raises(ValueError, match='Unnown strategy'):
+        DataPreprocessor.smooth_data([10.0, 20.00], strategy='magic_smoth')
+    
+def test_smoth_moving_average():
+    data = [10.0, 20.0, 30.0, 40.0]
+    result = DataPreprocessor.smooth_data(data, strategy='moving_average', window_size=2)
+    assert result == [10.0, 15.0, 25.0, 35.0]
+
+def test_smoth_moving_median():
+    data = [10.0, 100.0, 10.0, 20.0, 50.0]
+    result = DataPreprocessor.smooth_data(data, strategy='moving_median', window_size=3)
+    assert result == [10.0, 55.0, 10.0, 20.0, 20.0]
