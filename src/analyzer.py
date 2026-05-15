@@ -11,45 +11,46 @@ class UpliftAnalyzer:
                  forecast_model: str='linear_trend',
                  missing_value_strategy: str='linear',
                  smoothing_strategy: Optional[str]=None,
-                 windiw_size: int=3,
+                 window_size: int=3,
                  floor_value: Optional[float]=0.0,
                  allow_negative_uplift: bool=False):
         
         self.forecast_model = forecast_model
         self.missing_value_strategy = missing_value_strategy
         self.smoothing_strategy = smoothing_strategy
-        self.windiw_size = windiw_size
+        self.window_size = window_size
         self.floor_value = floor_value
         self.allow_negative_uplift = allow_negative_uplift
 
         if self.forecast_model == 'linear_trend':
             self.model: BaseForecaster = LinearTrendForecaster(floor_value=self.floor_value)
         else:
-            raise ValueError(f'Unnown model {self.forecast_model}')
+            raise ValueError(f'Unknown model {self.forecast_model}')
 
-    def analyze(self, raw_data: List[Tuple[datetime.date, float]], intervation_date: datetime.date) -> UpliftResult:
+    def analyze(self, raw_data: List[Tuple[datetime.date, float]], intervention_date: datetime.date) -> UpliftResult:
         ts_data = TimeSeriesData(raw_data)
 
         train_dates, train_y, test_dates, test_y, train_x, test_x = self._split_data(
-            ts_data.dates, ts_data.values, intervation_date
+            ts_data.dates, ts_data.values, intervention_date
         )
 
         if len(train_y) < 2:
-            raise InsufficientDataError('Do not have enought data (need 2 or more points)')
-        if self.smoothing_strategy and len(train_y) < self.windiw_size:
-            raise InsufficientDataError(f'Train data is shorter then window {self.windiw_size}')
+            raise InsufficientDataError('Do not have enough data (need 2 or more points)')
+        if self.smoothing_strategy and len(train_y) < self.window_size:
+            raise InsufficientDataError(f'Train data is shorter than window {self.window_size}')
         if len(test_y) < 1:
-            raise InsufficientDataError('Not enought data!')
+            raise InsufficientDataError('Not enough data!')
 
         train_y_clean = DataPreprocessor.impute_missing_values(train_y, self.missing_value_strategy)
-        test_t_clean = DataPreprocessor.impute_missing_values(test_y, self.missing_value_strategy)
+        test_y_clean = DataPreprocessor.impute_missing_values(test_y, self.missing_value_strategy)
 
-        train_y_smooth = DataPreprocessor.smooth_data(train_y_clean, self.smoothing_strategy, self.windiw_size)
+        train_y_smooth = DataPreprocessor.smooth_data(train_y_clean, self.smoothing_strategy, self.window_size)
 
-        self.model.fit( train_x, train_y_smooth)
+        self.model.fit(train_x, train_y_smooth)
 
         train_predictions = self.model.predict(train_x)
-        train_mae = sum(abs(fact - pref) for fact, pred in zip(train_y_smooth, train_predictions)) / len(train_y_smooth)
+        # Исправлено pref на pred
+        train_mae = sum(abs(fact - pred) for fact, pred in zip(train_y_smooth, train_predictions)) / len(train_y_smooth)
 
         test_predictions = self.model.predict(test_x)
 
@@ -78,9 +79,9 @@ class UpliftAnalyzer:
     def _split_data(
         dates: List[datetime.date],
         values: List[Optional[float]],
-        intervention_data: datetime.date
+        intervention_date: datetime.date
     ) -> Tuple[List[datetime.date], List[Optional[float]], List[datetime.date], List[Optional[float]], List[int], List[int]]:
-        if intervention_data not in dates:
+        if intervention_date not in dates:
             raise DataValidationError(f'Date {intervention_date} not in dates!')
         split_index = dates.index(intervention_date)
         
