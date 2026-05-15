@@ -4,7 +4,7 @@ from src.base import UpliftResult, BaseForecaster
 from src.data import TimeSeriesData
 from src.preprocessor import DataPreprocessor
 from src.models import LinearTrendForecaster
-from exceptions import InsufficientDataError, DataValidationError
+from src.exceptions import InsufficientDataError, DataValidationError
 
 class UpliftAnalyzer:
     def __init__(self,
@@ -39,7 +39,7 @@ class UpliftAnalyzer:
         if self.smoothing_strategy and len(train_y) < self.windiw_size:
             raise InsufficientDataError(f'Train data is shorter then window {self.windiw_size}')
         if len(test_y) < 1:
-            raise InsufficientDataError('Do not have data!')
+            raise InsufficientDataError('Not enought data!')
 
         train_y_clean = DataPreprocessor.impute_missing_values(train_y, self.missing_value_strategy)
         test_t_clean = DataPreprocessor.impute_missing_values(test_y, self.missing_value_strategy)
@@ -79,7 +79,7 @@ class UpliftAnalyzer:
         dates: List[datetime.date],
         values: List[Optional[float]],
         intervention_data: datetime.date
-    ) -> Tuple[List[datetime.date]], List[Optional[float]], List[datetime.date], List[Optional[float]], List[int], List[int]:
+    ) -> Tuple[List[datetime.date], List[Optional[float]], List[datetime.date], List[Optional[float]], List[int], List[int]]:
         if intervention_data not in dates:
             raise DataValidationError(f'Date {intervention_date} not in dates!')
         split_index = dates.index(intervention_date)
