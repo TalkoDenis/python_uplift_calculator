@@ -4,7 +4,6 @@ from src.analyzer import UpliftAnalyzer
 from src.exceptions import InsufficientDataError, DataValidationError
 
 def test_full_pipeline_positive_uplift():
-    """Интеграционный тест: идеальный линейный тренд с явным приростом."""
     raw_data = [
         (datetime.date(2026, 1, 1), 10.0),
         (datetime.date(2026, 1, 2), 20.0),
@@ -34,19 +33,16 @@ def test_full_pipeline_positive_uplift():
     assert result.train_mae == 0.0
 
 def test_analyzer_insufficient_data():
-    """Проверка валидации длины данных внутри анализатора."""
     raw_data = [
         (datetime.date(2026, 1, 1), 10.0),
         (datetime.date(2026, 1, 2), 20.0),
     ]
     analyzer = UpliftAnalyzer()
 
-    # Текст должен совпадать с тем, что в src/analyzer.py
     with pytest.raises(InsufficientDataError, match='Do not have enough data'):
         analyzer.analyze(raw_data, intervention_date=datetime.date(2026, 1, 2))
 
 def test_full_pipeline_with_smoothing():
-    """Проверяем работу пайплайна с включенным сглаживанием (moving_average)."""
     raw_data = [
         (datetime.date(2026, 1, 1), 10.0),
         (datetime.date(2026, 1, 2), 30.0),

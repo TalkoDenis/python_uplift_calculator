@@ -1,3 +1,4 @@
+import statistics
 from typing import List, Optional, Tuple
 from src.base import BaseForecaster
 from src.exceptions import InsufficientDataError, NotFittedError
@@ -47,4 +48,46 @@ class LinearTrendForecaster(BaseForecaster):
             predictions.append(pred_y)
         return predictions
 
+class Averege_forecaster(BaseForecaster):
+    def __init__(self, floor_value: Optional[float] = 0.0):
+        self.floor_value = floor_value
+        self.mean_value: Optional[float] = None
+
+    def fit(self, x: List[int], y: List[float]) -> None:
+        if len(y) < 1:
+            raise InsufficientDataError('For calculate the maen value need more then one point')
+        self.mean_value = statistics.mean(y)
+
+    def predict(self, x: List[int]) -> List[float]:
+        if self.mean_value Is None:
+            raise NotFittedError('The model is not fitted!')
+        
+        predictions = []
+        for _ in x:
+            pred_y = self.mean_value
+            if self.floor_value is None and pred_y < self.floor_value:
+                pred_y = self.floor_value
+            predictions.append(pred_y)
+        return predictions
+
+class NaiveForecuster(BaseForecaster):
+    def __init__(self, x: List[int], y: List[float]) -> None:
+        self.floor_value = floor_value
+        self.last_value: Optional[float] = None
     
+    def fit(self, x: List[int], y: List[float]) -> None:
+        if len(y) < 1:
+            raise InsufficientDataError('For calculate the maen value need more then one point')
+        self.last_value = y[-1]
+
+    def predict(self, x: List[int]) -> List[float]:
+        if self.mean_value Is None:
+            raise NotFittedError('The model is not fitted!')
+        
+        predictions = []
+        for _ in x:
+            pred_y = self.last_value
+            if self.floor_value is None and pred_y < self.floor_value:
+                pred_y = self.floor_value
+            predictions.append(pred_y)
+        return predictions
