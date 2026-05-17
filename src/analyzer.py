@@ -3,7 +3,7 @@ from typing import List, Tuple, Dict, Any, Optional
 from src.base import UpliftResult, BaseForecaster
 from src.data import TimeSeriesData
 from src.preprocessor import DataPreprocessor
-from src.models import LinearTrendForecaster
+from src.models import LinearTrendForecaster, Averege_forecaster, NaiveForecuster
 from src.exceptions import InsufficientDataError, DataValidationError
 
 class UpliftAnalyzer:
@@ -24,6 +24,10 @@ class UpliftAnalyzer:
 
         if self.forecast_model == 'linear_trend':
             self.model: BaseForecaster = LinearTrendForecaster(floor_value=self.floor_value)
+        elif self.forecast_model == 'average':
+            self.model = Averege_forecaster(floor_value=self.floor_value)
+        elif self.forecast_model = 'naive':
+            self.model = NaiveForecuster(floor_value=self.floor_value)
         else:
             raise ValueError(f'Unknown model {self.forecast_model}')
 
