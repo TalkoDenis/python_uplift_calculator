@@ -59,7 +59,7 @@ class Averege_forecaster(BaseForecaster):
         self.mean_value = statistics.mean(y)
 
     def predict(self, x: List[int]) -> List[float]:
-        if self.mean_value Is None:
+        if self.mean_value is None:
             raise NotFittedError('The model is not fitted!')
         
         predictions = []
@@ -71,7 +71,7 @@ class Averege_forecaster(BaseForecaster):
         return predictions
 
 class NaiveForecuster(BaseForecaster):
-    def __init__(self, x: List[int], y: List[float]) -> None:
+    def __init__(self, floor_value: Optional[float] = 0.0) -> None:
         self.floor_value = floor_value
         self.last_value: Optional[float] = None
     
@@ -81,7 +81,7 @@ class NaiveForecuster(BaseForecaster):
         self.last_value = y[-1]
 
     def predict(self, x: List[int]) -> List[float]:
-        if self.mean_value Is None:
+        if self.last_value is None:
             raise NotFittedError('The model is not fitted!')
         
         predictions = []

@@ -65,3 +65,20 @@ def test_full_pipeline_with_smoothing():
     
     assert isinstance(result.total_uplift, float)
     assert len(result.forecast_data) == 2
+
+def test_analyzer_with_average_model():
+    raw_data = [
+        (datetime.date(2026, 1, 1), 20.0),
+        (datetime.date(2026, 1, 2), 20.0),
+        (datetime.date(2026, 1, 3), 40.0),
+    ]
+
+    analyzer = UpliftAnalyzer(forecast_model='average', smoothing_strategy=None)
+    result = analyzer.analyze(raw_data, intervention_date=datetime.date(2026, 1, 3))
+
+    assert result.total_uplift == 20.0
+    assert result.forecast_data == [20.0]
+
+def test_analyzer_unknown_model():
+    with pytest.raises(ValueError, match='Unknown model'):
+        UpliftAnalyzer(forecast_model='magic_model')

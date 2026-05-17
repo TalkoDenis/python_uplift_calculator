@@ -1,6 +1,6 @@
 import pytest
 
-from src.models import LinearTrendForecaster
+from src.models import LinearTrendForecaster, Averege_forecaster, NaiveForecuster
 from src.exceptions import InsufficientDataError, NotFittedError
 
 def test_calculate_coefficients_normal():
@@ -54,3 +54,29 @@ def test_model_floor_values_clipping():
     predictions = model.predict([5, 6])
 
     assert predictions == [0.0, 0.0]
+
+def test_average_forecust_normal():
+    model = Averege_forecaster()
+    model.fit([0, 1, 2], [10.0, 20.0, 30.0])
+
+    predictions = model.predict([3, 4])
+    assert predictions == [20.0, 20.0]
+
+def test_average_forecaster_insufficient_data():
+    model = Averege_forecaster()
+    with pytest.raises(InsufficientDataError):
+        model.fit([], [])
+
+def test_naive_forecaster_normal():
+    model = NaiveForecuster()
+    x = [0, 1, 2, 3]
+    y = [10.0, 50.0, 5.0, 15.0]
+    model.fit(x, y)
+
+    predictions = model.predict([4, 5])
+    assert predictions == [15.0, 15.0]
+
+def test_naive_forecaster_insufficient_data():
+    model = NaiveForecuster()
+    with pytest.raises(InsufficientDataError):
+        model.fit([], [])

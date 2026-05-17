@@ -26,7 +26,7 @@ class UpliftAnalyzer:
             self.model: BaseForecaster = LinearTrendForecaster(floor_value=self.floor_value)
         elif self.forecast_model == 'average':
             self.model = Averege_forecaster(floor_value=self.floor_value)
-        elif self.forecast_model = 'naive':
+        elif self.forecast_model == 'naive':
             self.model = NaiveForecuster(floor_value=self.floor_value)
         else:
             raise ValueError(f'Unknown model {self.forecast_model}')
